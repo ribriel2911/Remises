@@ -13,6 +13,8 @@ var TravelRequest = function(name, map) {
             console.log("Updating view for car driver: " + carDriver.name + "!!");
             console.log(newPosition);
 
+            carLayer.clearLayers();
+
             // Opción 1.
             carLayer.addLayer(L.marker(newPosition));
             // Opción 2.
