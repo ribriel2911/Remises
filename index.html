@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/configPantalla.css">
 
     <script scr="js/jquery-3.1.1.min.js"></script>
@@ -12,67 +12,101 @@
 
 </head>
 <body>
-<img src="auto.jpg" alt="" class="configImagen">
-<div style="width: 50%" class="contenedor container">
+<!--<img src="auto.jpg" alt="" class="configImagen">-->
+<div class="container-fluid">
+    <header>
+        <h2>Remises online</h2>
+    </header>
+    <div class="row">
+            <div class="col-md-3">
+                <form>
+                    <div class="form-group row">
+                        <label for="origen" class="col-4 col-form-label">Origen</label>
+                        <div class="col-8">
+                            <input class="form-control" type="text" value="" id="origen">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label for="destino" class="col-4 col-form-label">Destino</label>
+                        <div class="col-8">
+                            <input class="form-control" type="text" value="" id="destino">
+                        </div>
+                    </div>
 
-    Bienvenido al Sistema de Solicitud de Remises</br><br>
-    <form action="" name="formulario" method="get">
-        Origen: <input type="text" name="origen"/><br/><br/>
-        Destino: <input type="text" name="destino"/><br/><br/>
+                </form>
+
+            </div>
+            <div class="col-md-7">
+
+                <div class="row form-group">
+                    <label class="col-2 col-form-label" for="distanciaVehiculo">Distancia</label>
+                    <div class="col-sm-4">
+                        <select id="distanciaVehiculo" name="distanciaVehiculo" class="form-control">
+                            <option value="">Seleccionar</option>
+                            <option value="Entre 0 y 1km">Entre 0 y 1km</option>
+                            <option value="Entre 1 y 2km">Entre 1 y 2km</option>
+                            <option value="2km o más">2km o más</option>
+                        </select>
+                    </div>
 
 
-        <fieldset>
-            <legend><p style="font-family:times;color:red">¿Cuáles son sus preferencias para el viaje?</p></legend>
-            Distancia del vehículo<br/>
-            <select id="DistanciaVehiculo">
-                <option value="">Seleccionar</option>
-                <option value="Entre 0 y 1km">Entre 0 y 1km</option>
-                <option value="Entre 1 y 2km">Entre 1 y 2km</option>
-                <option value="2km o más">2km o más</option>
-            </select><br/><br/>
+                    <label class="col-2 col-form-label" for="auto">Auto</label>
+                    <div class="col-sm-4">
+                        <select name="auto" id="auto" class="form-control">
+                            <option value="">Seleccionar</option>
+                            <option value="ID">Toyota Corola</option>
+                            <option value="ID">Ford Focus</option>
+                            <option value="ID">Chevrolet Corsa</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-2 col-form-label" for="calificacion">Calificación</label>
+                    <div class="col-sm-4">
+                        <select name="calificacion" id="calificacion" class="form-control">
+                            <option value="">Seleccionar</option>
+                            <option value="ID">1 estrella</option>
+                            <option value="ID">2 estrellas</option>
+                            <option value="ID">3 estrellas</option>
+                            <option value="ID">4 estrellas</option>
+                            <option value="ID">5 estrellas</option>
+                        </select>
+                    </div>
 
-            Auto que utiliza el conductor<br/>
-            <select name="auto">
-                <option value="">Seleccionar</option>
-                <option value="ID">Toyota Corola</option>
-                <option value="ID">Ford Focus</option>
-                <option value="ID">Chevrolet Corsa</option>
-            </select><br/><br/>
+                    <label class="col-2 col-form-label" for="cantidadViajes">Viajes anteriores</label>
+                    <div class="col-sm-4">
+                        <select name="cantidadViajes" id="cantidadViajes" class="form-control">
+                            <option value="">Seleccionar</option>
+                            <option value="ID">Entre 2 y 5</option>
+                            <option value="ID">Más de 5</option>
+                        </select>
+                    </div>
 
-            Calificación del conductor<br/>
-            <select name="calificacion">
-                <option value="">Seleccionar</option>
-                <option value="ID">1 estrella</option>
-                <option value="ID">2 estrellas</option>
-                <option value="ID">3 estrellas</option>
-                <option value="ID">4 estrellas</option>
-                <option value="ID">5 estrellas</option>
-            </select><br/><br/>
+                </div>
+            </div>
+            <div class="col-md-2">
 
-            Cantidad de viajes reiterados entre usted y el conductor<br/>
-            <select name="cantidadViajes">
-                <option value="">Seleccionar</option>
-                <option value="ID">Entre 2 y 5</option>
-                <option value="ID">Más de 5</option>
-            </select><br/><br/>
+                <input type="button" name="btn" id="btnelegir" class="btn btn-success btn-lg" value="Solicitar chofer"/>
+                <!---->
+                <!--<div class="wrap">-->
+                    <!--<ul class="lista" id="lista">-->
+                        <!---->
+                        <!--<li><a href="#">Javier</a></li>-->
+                        <!--<li><a href="#">Jorge</a></li>-->
+                        <!--<li><a href="#">XXXXXx</a></li>-->
+                    <!--</ul>-->
+                <!--</div>-->
 
-        </fieldset>
 
-        <input type="button" name="btn" id="btnelegir" value="Solicitar chofer"/>
-        <div class="wrap">
-            <ul class="lista" id="lista">
-                <!--
-                <li><a href="#">Javier</a></li>
-                <li><a href="#">Jorge</a></li>
-                <li><a href="#">XXXXXx</a></li>
-            -->
-            </ul>
-        </div>
-    </form>
+            </div>
+
+    </div>
+    <h1>Bienvenido al Sistema de Solicitud de Remises</h1>
+
     </br>
     <script src="js/validacion.js"></script> <!-- llama a validacion de js -->
 
 
 </div>
-<body>
+</body>
 </html>
