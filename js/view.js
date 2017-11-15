@@ -75,7 +75,7 @@ function bootstrap() {
 
     var pepeIcon = L.icon({
         iconUrl: 'img/pepe.png',
-        iconSize: [38, 95 / 2]
+        iconSize: [80, 38]
         //iconAnchor: [38/2, 94/2]
         //popupAnchor: [-3, -76]
         //shadowSize: [68, 95],
