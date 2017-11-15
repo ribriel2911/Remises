@@ -3,20 +3,24 @@ var TravelRequest = function(name, map) {
     this.map = map;
     this.carsData = [];
 
-    this.addCar = function(carDriver) {
+    this.addCar = function(carDriver , carLayerParam) {
         //Creamos el layer en el mapa para ese carDriver
+
         var carLayer = L.layerGroup().addTo(this.map);
+
+        carLayer.addLayer(carLayerParam);
+
         // Agregamos el layer al control
         this.map.layersControl.addOverlay(carLayer, carDriver.name);
 
-        var updater = function(newPosition) {
-            console.log("Updating view for car driver: " + carDriver.name + "!!");
-            console.log(newPosition);
+        var updater = function(newPosition, icon) {
+            //console.log("Updating view for car driver: " + carDriver.name + "!!");
+            //console.log(newPosition);
 
             carLayer.clearLayers();
 
             // Opción 1.
-            carLayer.addLayer(L.marker(newPosition));
+            carLayer.addLayer(L.marker(newPosition, {icon:icon}));
             // Opción 2.
             // carLayer.addLayer(L.circleMarker(newPosition, {
             //                         radius: 7,
@@ -38,8 +42,13 @@ var TravelRequest = function(name, map) {
         this.carsData.forEach(function(data) {
             var carDriver = data.carDriver;
             carDriver.move(data.updater);
-            
-            
+
         });
+    }
+
+    this.startCar = function(car_i) {
+            var data = this.carsData[car_i];
+            var carDriver = data.carDriver;
+            carDriver.move(data.updater);
     }
 };

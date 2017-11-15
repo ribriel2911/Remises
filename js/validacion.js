@@ -1,27 +1,16 @@
-function include(file)
-{
-
-  var script  = document.createElement('script');
-  script.src  = file;
-  script.type = 'text/javascript';
-  script.defer = true;
-
-  document.getElementsByTagName('head').item(0).appendChild(script);
-
-}
-
-/* include any js files here */
-//include('view.js');
-//include('travelRequest.js');
-//include('carDriver.js');
 
 (function(){
     var lista = document.getElementById("lista"),
   		tareaInput = document.getElementById("tareaInput"),
   		btnNuevaTarea = document.getElementById("btnelegir");
 
+    var xdist = document.getElementById("DistanciaVehiculo"), //tomo datos del html
+        xauto = document.getElementById("auto"),
+        xcalif = document.getElementById("calificacion"),
+        xcant = document.getElementById("cantidadViajes");
 
-    var validar = function(e){
+
+    var validar = function(e){    //validamos que el usuario ingrese origen y destino
         //validarOrigen(e);
         //validarDestino(e);
 
@@ -45,6 +34,29 @@ function include(file)
     }
 
   	// Funciones
+
+    var pasarData = function(){
+
+      var choferseleccionado = "";
+      var distElegida = "";
+      var autoElegido = "";
+      var califElegida = "";
+      var cantElegida = "";
+
+      distElegida = xdist.options[xdist.selectedIndex].value; //accede a la opcion elegida del form
+      autoElegido = xauto.options[xauto.selectedIndex].value;
+      califElegida = xcalif.options[xcalif.selectedIndex].value;
+      cantElegida = xcant.options[xcant.selectedIndex].value;
+      console.log(this.innerText);
+      window.location = "view2.html?"
+            + "dist=" + distElegida
+            + "&auto=" + autoElegido
+            + "&calif=" + califElegida
+            + "&cant=" + cantElegida;
+
+
+    };
+
   	var agregarChofer = function(){
 
   		var chofer = "Pepe",//tareaInput.value,
@@ -81,15 +93,24 @@ function include(file)
   		// Agregamos la nueva tarea a la lista
   		lista.appendChild(nuevoChofer1);
 
-      var choferseleccionado = "";
-  		for (var i = 0; i <= lista.children.length -1; i++) {
-        console.log(i);
-  			lista.children[i].addEventListener("click", function(){
-          //choferseleccionado = lista.children[].textContent;
-          console.log(this.innerText);
-          window.location = "view2.html?car=" + this.innerText;
-  			});
-  		}
+
+
+//  		for (var i = 0; i <= lista.children.length -1; i++) {
+//  			lista.children[i].addEventListener("click", function(){
+//          //choferseleccionado = lista.children[].textContent;
+//          distElegida = xdist.options[xdist.selectedIndex].value;
+//          autoElegido = xauto.options[xauto.selectedIndex].value;
+//          califElegida = xcalif.options[xcalif.selectedIndex].value;
+//          cantElegida = xcant.options[xcant.selectedIndex].value;
+//          console.log(this.innerText);
+//          window.location = "view2.html?car=" + this.innerText
+//                + "&dist=" + distElegida
+//                + "&auto=" + autoElegido
+//                + "&calif=" + califElegida
+//                + "&cant=" + cantElegida;
+//          //window.location = "view2.html?dist=" + distElegida;
+//  			});
+//  		}
 
   	};
 
@@ -105,7 +126,7 @@ function include(file)
   	// Eventos
 
   	// Agregar choferes
-  	btnNuevaTarea.addEventListener("click", agregarChofer);
+  	btnNuevaTarea.addEventListener("click", pasarData);
 
   	// Comprobar Input
   	//tareaInput.addEventListener("click", comprobarInput);

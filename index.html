@@ -1,26 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<html>
+    <head>
+        <!--<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">-->
 
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/configPantalla.css">
+        <!-- <meta charset=utf-8/> -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-    <script scr="js/jquery-3.1.1.min.js"></script>
-    <script scr="js/bootstrap.min.js"></script>
+        <title>Remises online</title>
 
-</head>
-<body>
-<!--<img src="auto.jpg" alt="" class="configImagen">-->
-<div class="container-fluid">
-    <header>
+        <!--[if lt IE 9]>
+          <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="css/configPantalla.css">
+        <!-- include jQuery -->
+        <script src="js/jquery-3.1.1.min.js"></script>
+        <!-- include leaflet -->
+        <link rel="stylesheet" href="./leaflet/leaflet.css" />
+        <script src="leaflet/leaflet.js"></script>
+
+        <!-- include race, runner y view -->
+        <link rel="stylesheet" type="text/css" media="screen" href="css/view.css" />
+        <script src="js/travelRequest.js"></script>
+        <script src="js/carDriver.js"></script>
+        <script src="js/view.js"></script>
+
+        <script scr="js/bootstrap.min.js"></script>
+    </head>
+
+    <body>
+
+    <div class="container-fluid">
         <h2>Remises online</h2>
-    </header>
-    <div class="row">
+        <div class="row">
             <div class="col-md-3">
                 <form>
-                    <div class="form-group row">
+                    <div class="row">
                         <label for="origen" class="col-4 col-form-label">Origen</label>
                         <div class="col-8">
                             <input class="form-control" type="text" value="" id="origen">
@@ -38,7 +54,7 @@
             </div>
             <div class="col-md-7">
 
-                <div class="row form-group">
+                <div class="row">
                     <label class="col-2 col-form-label" for="distanciaVehiculo">Distancia</label>
                     <div class="col-sm-4">
                         <select id="distanciaVehiculo" name="distanciaVehiculo" class="form-control">
@@ -60,7 +76,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="row form-group">
+                <div class="row">
                     <label class="col-2 col-form-label" for="calificacion">Calificación</label>
                     <div class="col-sm-4">
                         <select name="calificacion" id="calificacion" class="form-control">
@@ -89,23 +105,22 @@
                 <input type="button" name="btn" id="btnelegir" class="btn btn-success btn-lg" value="Solicitar chofer"/>
                 <!---->
                 <!--<div class="wrap">-->
-                    <!--<ul class="lista" id="lista">-->
-                        <!---->
-                        <!--<li><a href="#">Javier</a></li>-->
-                        <!--<li><a href="#">Jorge</a></li>-->
-                        <!--<li><a href="#">XXXXXx</a></li>-->
-                    <!--</ul>-->
+                <!--<ul class="lista" id="lista">-->
+                <!---->
+                <!--<li><a href="#">Javier</a></li>-->
+                <!--<li><a href="#">Jorge</a></li>-->
+                <!--<li><a href="#">XXXXXx</a></li>-->
+                <!--</ul>-->
                 <!--</div>-->
 
 
             </div>
 
+        </div>
+        <div id="map"></div>
     </div>
-    <div id="map"></div>
-
-    <script src="js/validacion.js"></script> <!-- llama a validacion de js -->
-
-
-</div>
-</body>
+    <footer class="text-center">
+        <p>2017 FourSoft - Todos los derechos reservados </p>
+    </footer>
+    </body>
 </html>
