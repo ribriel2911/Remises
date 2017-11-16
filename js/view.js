@@ -173,10 +173,12 @@ function bootstrap() {
     var yMarker = L.marker(); //me guardo el marker
     var listMarker = [];
 
+    // Traducción de tipos de incidencias
     var translate = [];
     translate['1'] = 'Accidente';
     translate['2'] = 'Congestion';
     translate['3'] = 'Piquete';
+
     console.log(dr);
 
     /*for (var i = 0; i < dc.length; i+=1) {
