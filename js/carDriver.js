@@ -3,6 +3,7 @@ var CarDriver = function(name, historyPositions, icon) {
     this.historyPositions = historyPositions;
     this.icon = icon;
     var iconAuto = this.icon;
+    this.carLayout = L.layerGroup();
 
     var actualIx = 0;
 
@@ -16,5 +17,10 @@ var CarDriver = function(name, historyPositions, icon) {
                 self.move(callback);
             }
         }, 500);
+    }
+
+    this.getLayout = function(){
+
+        return this.carLayout;
     }
 };

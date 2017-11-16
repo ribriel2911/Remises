@@ -6,7 +6,7 @@ var TravelRequest = function(name, map) {
     this.addCar = function(carDriver , carLayerParam) {
         //Creamos el layer en el mapa para ese carDriver
 
-        var carLayer = L.layerGroup().addTo(this.map);
+        var carLayer = carDriver.getLayout().addTo(this.map);
 
         carLayer.addLayer(carLayerParam);
 
@@ -50,5 +50,12 @@ var TravelRequest = function(name, map) {
             var data = this.carsData[car_i];
             var carDriver = data.carDriver;
             carDriver.move(data.updater);
+    }
+
+    this.getLayer = function(car_i){
+
+            var data = this.carsData[car_i];
+            var carDriver = data.carDriver;
+            return carDriver.getLayout();
     }
 };

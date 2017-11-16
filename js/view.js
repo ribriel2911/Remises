@@ -270,6 +270,13 @@ function bootstrap() {
         for (var i = 0; i < chofAgregados.length; i += 1) {
             //var xcar = new CarDriver(dc[i][0], dc[i][6], dc[i][7]);
             if (chofAgregados[i] == rmarker) {
+
+                for (var j = 0; j < chofAgregados.length; j+=1) {
+
+                    if(j!=i) {
+                        map.removeLayer(travelreq.getLayer(j));
+                    }
+                }
                 //travelreq.addCar(xcar);
                 console.log(i);
                 //map.removeLayer( listMarker[i] );
