@@ -1,3 +1,36 @@
+function buscarConductoresPorPedido(conductores, chofAgregados, posiciones, dc, travelreq , availableDrivers) {
+    for (var i = 0; i < conductores.drivers.length; i += 1) {
+        //console.log("En el índice '" + i + "' hay este valor: " + dc[i][0]);
+        //if (dr[0] == dc[i][1] && dr[1] == dc[i][2] && dr[2] == dc[i][3] && dr[3] == dc[i][4]){
+
+        //var xMarker = L.marker(conductores.drivers[i].name, {icon:dc[0][7]});
+        //yMarker = xMarker;
+        //listMarker.push(xMarker);
+        if (availableDrivers.indexOf(conductores.drivers[i].id) >= 0) {
+            console.log("Paso el conductor: " + conductores.drivers[i].id);
+            chofAgregados.push(conductores.drivers[i].name);
+            //xMarker.addTo(map);
+            //xMarker.bindPopup(conductores.drivers[i].name).openPopup();
+
+            var posicionesDriver = [];
+
+            for (var x = 0; x < posiciones.positions.length; x++) {
+                if (conductores.drivers[i].id == posiciones.positions[x].driver) {
+                    posicionesDriver = posiciones.positions[x].positions;
+                }
+            }
+
+
+            var xMarker = null;
+            xMarker = L.marker(posicionesDriver[0], {icon: dc[0][7]});
+            xMarker.bindPopup(conductores.drivers[i].name).openPopup();
+
+
+            travelreq.addCar(new CarDriver(conductores.drivers[i].name, posicionesDriver, dc[0][7]), xMarker); //el ultimo parametro es del icono, lo agregamos nosotros
+        }
+    }
+}
+
 function bootstrap() {
 
     // Ubicación de la UNGS.
@@ -27,24 +60,24 @@ function bootstrap() {
         radius: 300
     }).addTo(map);*/
 
-    // Creamos un polígono.
-    L.polygon([
-        L.latLng(-34.515594, -58.705654),
-        L.latLng(-34.523503, -58.714062),
-        L.latLng(-34.519177, -58.719890),
-        L.latLng(-34.511089, -58.711374),
-        L.latLng(-34.514062, -58.707909),
-        L.latLng(-34.513824, -58.707584),
-    ]).addTo(map);
-
-    // Creamos un circuito.
-    L.polyline([
-        L.latLng(-34.524309, -58.695315),
-        L.latLng(-34.521865, -58.698213),
-        L.latLng(-34.520437, -58.699889),
-        L.latLng(-34.522388, -58.701957),
-        L.latLng(-34.523579, -58.700350)
-    ], {color: 'red'}).addTo(map);
+    // // Creamos un polígono.
+    // L.polygon([
+    //     L.latLng(-34.515594, -58.705654),
+    //     L.latLng(-34.523503, -58.714062),
+    //     L.latLng(-34.519177, -58.719890),
+    //     L.latLng(-34.511089, -58.711374),
+    //     L.latLng(-34.514062, -58.707909),
+    //     L.latLng(-34.513824, -58.707584),
+    // ]).addTo(map);
+    //
+    // // Creamos un circuito.
+    // L.polyline([
+    //     L.latLng(-34.524309, -58.695315),
+    //     L.latLng(-34.521865, -58.698213),
+    //     L.latLng(-34.520437, -58.699889),
+    //     L.latLng(-34.522388, -58.701957),
+    //     L.latLng(-34.523579, -58.700350)
+    // ], {color: 'red'}).addTo(map);
 
     var pepeHistory = [
         {lon: -58.695290, lat: -34.524297},
@@ -134,6 +167,9 @@ function bootstrap() {
     var chofAgregados = [];
     var tiposIncidencias = [];
 
+    var conductores = [];
+    var posiciones = [];
+
     var yMarker = L.marker(); //me guardo el marker
     var listMarker = [];
     console.log(dr);
@@ -154,16 +190,18 @@ function bootstrap() {
 
     // Cargar tipos de incidencias
     serviceCall('https://snapcar.herokuapp.com/api/incidentstypes', function (tipos) {
-        tiposIncidencias  = tipos;
-        $.each( tipos.incidenttypes, function( key, value ) {
+        tiposIncidencias = tipos;
+        $.each(tipos.incidenttypes, function (key, value) {
             // Ver que hago cuando cambia el nombredel tipo o manda otra incidencia
-            tiposIncidencias[value.id] = {  "description":value.description,
-                                            "delay":value.delay,
-                                            "icon":"img/incidents/"+value.description+'.png'};
+            tiposIncidencias[value.id] = {
+                "description": value.description,
+                "delay": value.delay,
+                "icon": "img/incidents/" + value.description + '.png'
+            };
         });
 
-        serviceCall('https://snapcar.herokuapp.com/api/incidents', function(incidencias){
-            $.each( incidencias.incidents, function( key, value ) {
+        serviceCall('https://snapcar.herokuapp.com/api/incidents', function (incidencias) {
+            $.each(incidencias.incidents, function (key, value) {
 
                 var tipo = tiposIncidencias[value.type];
                 var icon = L.icon({
@@ -174,7 +212,7 @@ function bootstrap() {
                     //shadowSize: [68, 95],
                     //shadowAnchor: [22, 94]
                 });
-                var marker = L.marker(value.coordinate, {icon:icon});
+                var marker = L.marker(value.coordinate, {icon: icon});
 
                 // var carLayer = L.layerGroup().addTo(map);
                 // carLayer.clearLayers();
@@ -182,66 +220,43 @@ function bootstrap() {
 
 
                 marker.addTo(map);
-                marker.bindPopup("<p>Incidencia</p><p>Tipo: "+tipo.description+"</p><p>Retraso: "+tipo.delay+"</p>").openPopup();
+                marker.bindPopup("<p>Incidencia</p><p>Tipo: " + tipo.description + "</p><p>Retraso: " + tipo.delay + "</p>");
             });
 
         });
+    });
+
+    serviceCall('https://snapcar.herokuapp.com/api/drivers/', function (conductoresR) {
+        conductores = conductoresR;
+
+    });
+
+    serviceCall('https://snapcar.herokuapp.com/api/positions/', function (posicionesR) {
+        posiciones = posicionesR;
     });
 
 
     serviceCall('https://snapcar.herokuapp.com/api/requests/', function (pedidos) {
-        //Llamada al servicio rest , trae los resultados de conductores
-        serviceCall('https://snapcar.herokuapp.com/api/drivers/', function (conductores) {
-            serviceCall('https://snapcar.herokuapp.com/api/positions/', function (posiciones) {
+        $.each(pedidos.requests, function (key, pedido) {
+            var ungsMarker = L.marker(pedido.coordinate);
+            var availableDrivers = pedido.availableDrivers;
+            ungsMarker.addTo(map);
+            ungsMarker['id'] = pedido.id;
+            ungsMarker['availableDrivers'] = pedido.availableDrivers;
+            ungsMarker.on({
+                "click": function (e) {
+                    ungsMarker.bindPopup("<b>Pedido</b>").openPopup();
 
-                var pedido = pedidos.requests[0];
-                var ungsMarker = L.marker(pedido.coordinate);
-                var availableDrivers = pedido.availableDrivers;
-
-                var circle = L.circle(pedido.coordinate, {
-                    color: '#0000AA',
-                    fillColor: '#0000CC',
-                    fillOpacity: 0.2,
-                    radius: 1000
-                }).addTo(map);
-
-                ungsMarker.addTo(map);
-                ungsMarker.bindPopup("<b>Pedido</b>").openPopup();
-
-
-                for (var i = 0; i < conductores.drivers.length; i += 1) {
-                    //console.log("En el índice '" + i + "' hay este valor: " + dc[i][0]);
-                    //if (dr[0] == dc[i][1] && dr[1] == dc[i][2] && dr[2] == dc[i][3] && dr[3] == dc[i][4]){
-
-                    //var xMarker = L.marker(conductores.drivers[i].name, {icon:dc[0][7]});
-                    //yMarker = xMarker;
-                    //listMarker.push(xMarker);
-                    if (availableDrivers.indexOf(conductores.drivers[i].id) >= 0) {
-                        console.log("Paso el conductor: " + conductores.drivers[i].id);
-                        chofAgregados.push(conductores.drivers[i].name);
-                        //xMarker.addTo(map);
-                        //xMarker.bindPopup(conductores.drivers[i].name).openPopup();
-
-                        var posicionesDriver = [];
-
-                        for (var x = 0; x < posiciones.positions.length; x++) {
-                            if (conductores.drivers[i].id == posiciones.positions[x].driver) {
-                                posicionesDriver = posiciones.positions[x].positions;
-                            }
-                        }
-
-
-                        var xMarker = null;
-                        xMarker = L.marker(posicionesDriver[0], {icon: dc[0][7]});
-                        xMarker.bindPopup(conductores.drivers[i].name).openPopup();
-
-
-                        travelreq.addCar(new CarDriver(conductores.drivers[i].name, posicionesDriver, dc[0][7]), xMarker); //el ultimo parametro es del icono, lo agregamos nosotros
-                    }
+                    buscarConductoresPorPedido(conductores, chofAgregados, posiciones, dc, travelreq , ungsMarker.availableDrivers);
                 }
             });
+
         });
+
     });
+
+
+
 
 
     function onMapClick(e) {
