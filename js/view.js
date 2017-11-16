@@ -172,6 +172,11 @@ function bootstrap() {
 
     var yMarker = L.marker(); //me guardo el marker
     var listMarker = [];
+
+    var translate = [];
+    translate['1'] = 'Accidente';
+    translate['2'] = 'Congestion';
+    translate['3'] = 'Piquete';
     console.log(dr);
 
     /*for (var i = 0; i < dc.length; i+=1) {
@@ -196,7 +201,8 @@ function bootstrap() {
             tiposIncidencias[value.id] = {
                 "description": value.description,
                 "delay": value.delay,
-                "icon": "img/incidents/" + value.description + '.png'
+                "icon": "img/incidents/" + value.description + '.png',
+                "translate" : translate[value.id]
             };
         });
 
@@ -220,7 +226,7 @@ function bootstrap() {
 
 
                 marker.addTo(map);
-                marker.bindPopup("<p>Incidencia</p><p>Tipo: " + tipo.description + "</p><p>Retraso: " + tipo.delay + "</p>");
+                marker.bindPopup("<p>Incidencia</p><p>Tipo: " + tipo.translate + "</p><p>Retraso: " + tipo.delay + " minutos</p>");
             });
 
         });
