@@ -191,7 +191,7 @@ function bootstrap() {
                 ungsMarker['availableDrivers'] = pedido.availableDrivers;
                 ungsMarker.on({
                     "click": function (e) {
-                        ungsMarker.bindPopup("<b>Pedido</b>").openPopup();
+                        ungsMarker.bindPopup("<b>Pedido Nº "+pedido.id+"</b>").openPopup();
 
                         buscarConductoresPorPedido(ungsMarker.availableDrivers);
                     }
