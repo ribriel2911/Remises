@@ -1,57 +1,3 @@
-function buscarConductoresPorPedido(conductores, chofAgregados, posiciones, dc, travelreq , availableDrivers) {
-    for (var i = 0; i < conductores.drivers.length; i += 1) {
-        //console.log("En el índice '" + i + "' hay este valor: " + dc[i][0]);
-        //if (dr[0] == dc[i][1] && dr[1] == dc[i][2] && dr[2] == dc[i][3] && dr[3] == dc[i][4]){
-
-        //var xMarker = L.marker(conductores.drivers[i].name, {icon:dc[0][7]});
-        //yMarker = xMarker;
-        //listMarker.push(xMarker);
-        if (availableDrivers.indexOf(conductores.drivers[i].id) >= 0) {
-            console.log("Paso el conductor: " + conductores.drivers[i].id);
-            chofAgregados.push(conductores.drivers[i].name);
-            //xMarker.addTo(map);
-            //xMarker.bindPopup(conductores.drivers[i].name).openPopup();
-
-            var posicionesDriver = [];
-
-            for (var x = 0; x < posiciones.positions.length; x++) {
-                if (conductores.drivers[i].id == posiciones.positions[x].driver) {
-                    posicionesDriver = posiciones.positions[x].positions;
-                }
-            }
-
-
-            var xMarker = null;
-            xMarker = L.marker(posicionesDriver[0], {icon: dc[0][7]});
-            xMarker.bindPopup(conductores.drivers[i].name).openPopup();
-
-
-            travelreq.addCar(new CarDriver(conductores.drivers[i].name, posicionesDriver, dc[0][7]), xMarker); //el ultimo parametro es del icono, lo agregamos nosotros
-        }
-    }
-}
-
-function buscarPedidos(map, conductores, chofAgregados, posiciones, dc, travelreq) {
-    serviceCall('https://snapcar.herokuapp.com/api/requests/', function (pedidos) {
-        $.each(pedidos.requests, function (key, pedido) {
-            var ungsMarker = L.marker(pedido.coordinate);
-            var availableDrivers = pedido.availableDrivers;
-            ungsMarker.addTo(map);
-            ungsMarker['id'] = pedido.id;
-            ungsMarker['availableDrivers'] = pedido.availableDrivers;
-            ungsMarker.on({
-                "click": function (e) {
-                    ungsMarker.bindPopup("<b>Pedido</b>").openPopup();
-
-                    buscarConductoresPorPedido(conductores, chofAgregados, posiciones, dc, travelreq, ungsMarker.availableDrivers);
-                }
-            });
-
-        });
-
-    });
-}
-
 function bootstrap() {
 
     // Ubicación de la UNGS.
@@ -200,7 +146,61 @@ function bootstrap() {
     translate['2'] = 'Congestion';
     translate['3'] = 'Piquete';
 
-    console.log(dr);
+    //console.log(dr);
+
+
+    function buscarConductoresPorPedido(availableDrivers) {
+        for (var i = 0; i < conductores.drivers.length; i += 1) {
+            //console.log("En el índice '" + i + "' hay este valor: " + dc[i][0]);
+            //if (dr[0] == dc[i][1] && dr[1] == dc[i][2] && dr[2] == dc[i][3] && dr[3] == dc[i][4]){
+
+            //var xMarker = L.marker(conductores.drivers[i].name, {icon:dc[0][7]});
+            //yMarker = xMarker;
+            //listMarker.push(xMarker);
+            if (availableDrivers.indexOf(conductores.drivers[i].id) >= 0) {
+                console.log("Paso el conductor: " + conductores.drivers[i].id);
+                chofAgregados.push(conductores.drivers[i].name);
+                //xMarker.addTo(map);
+                //xMarker.bindPopup(conductores.drivers[i].name).openPopup();
+
+                var posicionesDriver = [];
+
+                for (var x = 0; x < posiciones.positions.length; x++) {
+                    if (conductores.drivers[i].id == posiciones.positions[x].driver) {
+                        posicionesDriver = posiciones.positions[x].positions;
+                    }
+                }
+
+
+                var xMarker = null;
+                xMarker = L.marker(posicionesDriver[0], {icon: dc[0][7]});
+                xMarker.bindPopup(conductores.drivers[i].name).openPopup();
+
+
+                travelreq.addCar(new CarDriver(conductores.drivers[i].name, posicionesDriver, dc[0][7]), xMarker); //el ultimo parametro es del icono, lo agregamos nosotros
+            }
+        }
+    }
+    function buscarPedidos() {
+        serviceCall('https://snapcar.herokuapp.com/api/requests/', function (pedidos) {
+            $.each(pedidos.requests, function (key, pedido) {
+                var ungsMarker = L.marker(pedido.coordinate);
+                var availableDrivers = pedido.availableDrivers;
+                ungsMarker.addTo(map);
+                ungsMarker['id'] = pedido.id;
+                ungsMarker['availableDrivers'] = pedido.availableDrivers;
+                ungsMarker.on({
+                    "click": function (e) {
+                        ungsMarker.bindPopup("<b>Pedido</b>").openPopup();
+
+                        buscarConductoresPorPedido(ungsMarker.availableDrivers);
+                    }
+                });
+
+            });
+
+        });
+    }
 
     /*for (var i = 0; i < dc.length; i+=1) {
       //console.log("En el índice '" + i + "' hay este valor: " + dc[i][0]);
@@ -216,93 +216,102 @@ function bootstrap() {
       }
     }*/
 
-    // Cargar tipos de incidencias
-    serviceCall('https://snapcar.herokuapp.com/api/incidentstypes', function (tipos) {
-        tiposIncidencias = tipos;
-        $.each(tipos.incidenttypes, function (key, value) {
-            // Ver que hago cuando cambia el nombredel tipo o manda otra incidencia
-            tiposIncidencias[value.id] = {
-                "description": value.description,
-                "delay": value.delay,
-                "icon": "img/incidents/" + value.description + '.png',
-                "translate" : translate[value.id]
-            };
-        });
-
-        serviceCall('https://snapcar.herokuapp.com/api/incidents', function (incidencias) {
-            $.each(incidencias.incidents, function (key, value) {
-
-                var tipo = tiposIncidencias[value.type];
-                var icon = L.icon({
-                    iconUrl: tipo.icon,
-                    iconSize: [38, 38]
-                    //iconAnchor: [38/2, 94/2]
-                    //popupAnchor: [-3, -76]
-                    //shadowSize: [68, 95],
-                    //shadowAnchor: [22, 94]
-                });
-                var marker = L.marker(value.coordinate, {icon: icon});
-
-                // var carLayer = L.layerGroup().addTo(map);
-                // carLayer.clearLayers();
-                // carLayer.addLayer(L.marker(value.coordinate, {icon:icon}));
-
-
-                marker.addTo(map);
-                marker.bindPopup("<p>Incidencia</p><p>Tipo: " + tipo.translate + "</p><p>Retraso: " + tipo.delay + " minutos</p>");
+    function cargarIncidencias() {
+        serviceCall('https://snapcar.herokuapp.com/api/incidentstypes', function (tipos) {
+            tiposIncidencias = tipos;
+            $.each(tipos.incidenttypes, function (key, value) {
+                // Ver que hago cuando cambia el nombredel tipo o manda otra incidencia
+                tiposIncidencias[value.id] = {
+                    "description": value.description,
+                    "delay": value.delay,
+                    "icon": "img/incidents/" + value.description + '.png',
+                    "translate": translate[value.id]
+                };
             });
 
+            serviceCall('https://snapcar.herokuapp.com/api/incidents', function (incidencias) {
+                $.each(incidencias.incidents, function (key, value) {
+
+                    var tipo = tiposIncidencias[value.type];
+                    var icon = L.icon({
+                        iconUrl: tipo.icon,
+                        iconSize: [38, 38]
+                        //iconAnchor: [38/2, 94/2]
+                        //popupAnchor: [-3, -76]
+                        //shadowSize: [68, 95],
+                        //shadowAnchor: [22, 94]
+                    });
+                    var marker = L.marker(value.coordinate, {icon: icon});
+
+                    // var carLayer = L.layerGroup().addTo(map);
+                    // carLayer.clearLayers();
+                    // carLayer.addLayer(L.marker(value.coordinate, {icon:icon}));
+
+
+                    marker.addTo(map);
+                    marker.bindPopup("<p>Incidencia</p><p>Tipo: " + tipo.translate + "</p><p>Retraso: " + tipo.delay + " minutos</p>");
+                });
+
+            });
         });
-    });
+    }
 
-    serviceCall('https://snapcar.herokuapp.com/api/drivers/', function (conductoresR) {
-        conductores = conductoresR;
+    function cargarConductores() {
+        serviceCall('https://snapcar.herokuapp.com/api/drivers/', function (conductoresR) {
+            conductores = conductoresR;
 
-    });
+        });
+    }
 
-    serviceCall('https://snapcar.herokuapp.com/api/positions/', function (posicionesR) {
-        posiciones = posicionesR;
-    });
-
-
-
-
-
-
-
+    function cargarPocisiones() {
+        serviceCall('https://snapcar.herokuapp.com/api/positions/', function (posicionesR) {
+            posiciones = posicionesR;
+        });
+    }
 
     function onMapClick(e) {
         //alert("Usted esta aqui " + e.latlng);
     }
 
-    $( "#btnelegir" ).click(function() {
-        buscarPedidos(map, conductores, chofAgregados, posiciones, dc, travelreq);
-    });
+    function bindElements() {
+        $("#btnelegir").click(function () {
+            buscarPedidos();
+        });
 
-    map.on('popupopen', function (e) {
-        var rmarker = e.popup._content;
-        //map.removeLayer(yMarker); //removemos el icono del mapa
-        console.log(chofAgregados);
-        for (var i = 0; i < chofAgregados.length; i += 1) {
-            //var xcar = new CarDriver(dc[i][0], dc[i][6], dc[i][7]);
-            if (chofAgregados[i] == rmarker) {
+        map.on('popupopen', function (e) {
+            var rmarker = e.popup._content;
+            //map.removeLayer(yMarker); //removemos el icono del mapa
+            console.log(chofAgregados);
+            for (var i = 0; i < chofAgregados.length; i += 1) {
+                //var xcar = new CarDriver(dc[i][0], dc[i][6], dc[i][7]);
+                if (chofAgregados[i] == rmarker) {
 
-                for (var j = 0; j < chofAgregados.length; j+=1) {
+                    for (var j = 0; j < chofAgregados.length; j += 1) {
 
-                    if(j!=i) {
-                        map.removeLayer(travelreq.getLayer(j));
+                        if (j != i) {
+                            map.removeLayer(travelreq.getLayer(j));
+                        }
                     }
+                    //travelreq.addCar(xcar);
+                    console.log(i);
+                    //map.removeLayer( listMarker[i] );
+                    travelreq.startCar(i);
                 }
-                //travelreq.addCar(xcar);
-                console.log(i);
-                //map.removeLayer( listMarker[i] );
-                travelreq.startCar(i);
             }
-        }
-    });
+        });
 
-    map.on('click', onMapClick);
-    // START!
+        map.on('click', onMapClick);
+        // START!
+    }
+
+
+    // Cargar tipos de incidencias
+    cargarIncidencias();
+
+    cargarConductores();
+    cargarPocisiones();
+
+    bindElements();
 
 
 }
@@ -327,4 +336,4 @@ function serviceCall(urlParam, callbackParam) {
 }
 
 
-$(bootstrap)
+$(bootstrap);
