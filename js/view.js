@@ -31,6 +31,27 @@ function buscarConductoresPorPedido(conductores, chofAgregados, posiciones, dc, 
     }
 }
 
+function buscarPedidos(map, conductores, chofAgregados, posiciones, dc, travelreq) {
+    serviceCall('https://snapcar.herokuapp.com/api/requests/', function (pedidos) {
+        $.each(pedidos.requests, function (key, pedido) {
+            var ungsMarker = L.marker(pedido.coordinate);
+            var availableDrivers = pedido.availableDrivers;
+            ungsMarker.addTo(map);
+            ungsMarker['id'] = pedido.id;
+            ungsMarker['availableDrivers'] = pedido.availableDrivers;
+            ungsMarker.on({
+                "click": function (e) {
+                    ungsMarker.bindPopup("<b>Pedido</b>").openPopup();
+
+                    buscarConductoresPorPedido(conductores, chofAgregados, posiciones, dc, travelreq, ungsMarker.availableDrivers);
+                }
+            });
+
+        });
+
+    });
+}
+
 function bootstrap() {
 
     // Ubicación de la UNGS.
@@ -244,24 +265,7 @@ function bootstrap() {
     });
 
 
-    serviceCall('https://snapcar.herokuapp.com/api/requests/', function (pedidos) {
-        $.each(pedidos.requests, function (key, pedido) {
-            var ungsMarker = L.marker(pedido.coordinate);
-            var availableDrivers = pedido.availableDrivers;
-            ungsMarker.addTo(map);
-            ungsMarker['id'] = pedido.id;
-            ungsMarker['availableDrivers'] = pedido.availableDrivers;
-            ungsMarker.on({
-                "click": function (e) {
-                    ungsMarker.bindPopup("<b>Pedido</b>").openPopup();
 
-                    buscarConductoresPorPedido(conductores, chofAgregados, posiciones, dc, travelreq , ungsMarker.availableDrivers);
-                }
-            });
-
-        });
-
-    });
 
 
 
@@ -270,6 +274,10 @@ function bootstrap() {
     function onMapClick(e) {
         //alert("Usted esta aqui " + e.latlng);
     }
+
+    $( "#btnelegir" ).click(function() {
+        buscarPedidos(map, conductores, chofAgregados, posiciones, dc, travelreq);
+    });
 
     map.on('popupopen', function (e) {
         var rmarker = e.popup._content;
