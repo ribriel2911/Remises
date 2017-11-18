@@ -3,7 +3,7 @@
         ajaxDialog = function (urlParam) {
             // Promise to let me know when complete
             return $.ajax({
-                url: urlParam,
+                url: 'https://snapcar.herokuapp.com/api/'+urlParam,
                 dataType: 'json',
             }).promise();
 

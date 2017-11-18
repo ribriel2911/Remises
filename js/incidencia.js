@@ -1,12 +1,13 @@
-var Incidencia = function(descripcion,delay,icon,id) {
+var Incidencia = function (tipo, posicion) {
 
-	// Traducción de tipos de incidencias
-    var translate = ['Accidente','Congestion','Piquete'];
+	this.tipo = tipo;
+	this.posicion = posicion;
+	this.icon = L.icon({
+                        iconUrl: tipo.icon,
+                        iconSize: [38, 38]
+                    });
+	this.marker = L.marker(posicion, {icon: this.icon});
 
-	this.descripcion = descripcion;
-	this.delay = delay;
-	this.icon = icon;
-	this.tipo = translate[id];
-
-	
+	this.marker.bindPopup(	"<p>Incidencia</p><p>Tipo: " + tipo.descripcion
+									+ "</p><p>Retraso: " + tipo.retraso + " minutos</p>");
 };

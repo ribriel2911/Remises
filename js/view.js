@@ -53,6 +53,7 @@ function bootstrap() {
 
     // Cargar tipos de incidencias
     cargarTiposDeIncidencia();
+    cargarIncidencias();
 
     cargarConductores();
     cargarPocisiones();
@@ -86,7 +87,7 @@ function bootstrap() {
         }
     }
     function buscarPedidos() {
-        serviceCall('https://snapcar.herokuapp.com/api/requests/', function (pedidos) {
+        serviceCall('requests', function (pedidos) {
             $.each(pedidos.requests, function (key, pedido) {
                 var ungsMarker = L.marker(pedido.coordinate);
                 var availableDrivers = pedido.availableDrivers;
@@ -108,52 +109,43 @@ function bootstrap() {
 
     function cargarTiposDeIncidencia() {
 
-        serviceCall('https://snapcar.herokuapp.com/api/incidentstypes', function (tipos) {
+        serviceCall('incidentstypes', function (tipos) {
             tiposIncidencias = tipos;
             $.each(tipos.incidenttypes, function (key, value) {
                 // Ver que hago cuando cambia el nombre del tipo o manda otra incidencia
 
-                var inc = new Incidencia(
-                        value.description,
+                var inc = new TipoIncidencia(
+                        value.id,
                         value.delay,
-                        "img/incidents/" + value.description + '.png',
-                        value.id);
+                        "img/incidents/" + value.description + '.png');
 
                 tiposIncidencias[value.id] =  inc;
             });
         });
-
-        cargarIncidencias();
     }
 
     function cargarIncidencias() {
         
 
-            serviceCall('https://snapcar.herokuapp.com/api/incidents', function (incidencias) {
+            serviceCall('incidents', function (incidencias) {
                 $.each(incidencias.incidents, function (key, value) {
 
-                    var incidencia = tiposIncidencias[value.type];
-                    var icon = L.icon({
-                        iconUrl: incidencia.icon,
-                        iconSize: [38, 38]
-                    });
-                    var marker = L.marker(value.coordinate, {icon: icon});
+                    var incidencia = new Incidencia(tiposIncidencias[value.type], value.coordinate);
 
-                    marker.addTo(map);
-                    marker.bindPopup("<p>Incidencia</p><p>Tipo: " + incidencia.tipo + "</p><p>Retraso: " + incidencia.delay + " minutos</p>");
+                    incidencia.marker.addTo(map);
                 });
             });
     }
 
     function cargarConductores() {
-        serviceCall('https://snapcar.herokuapp.com/api/drivers/', function (conductoresR) {
+        serviceCall('drivers', function (conductoresR) {
             conductores = conductoresR;
 
         });
     }
 
     function cargarPocisiones() {
-        serviceCall('https://snapcar.herokuapp.com/api/positions/', function (posicionesR) {
+        serviceCall('positions', function (posicionesR) {
             posiciones = posicionesR;
         });
     }
