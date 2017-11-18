@@ -3,7 +3,7 @@ var Incidencia = function (tipo, posicion) {
 	this.tipo = tipo;
 	this.posicion = posicion;
 	this.icon = L.icon({
-                        iconUrl: tipo.icon,
+                        iconUrl: tipo.urlIcon,
                         iconSize: [38, 38]
                     });
 	this.marker = L.marker(posicion, {icon: this.icon});

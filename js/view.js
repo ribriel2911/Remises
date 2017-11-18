@@ -51,9 +51,10 @@ function bootstrap() {
 
 
 
-    // Cargar tipos de incidencias
-    cargarTiposDeIncidencia();
-    cargarIncidencias();
+    // Cargar incidencias
+    var servicioIncidencias = new IncidenciasService();
+
+    servicioIncidencias.cargarIncidencias(map);
 
     cargarConductores();
     cargarPocisiones();
@@ -105,36 +106,6 @@ function bootstrap() {
             });
 
         });
-    }
-
-    function cargarTiposDeIncidencia() {
-
-        serviceCall('incidentstypes', function (tipos) {
-            tiposIncidencias = tipos;
-            $.each(tipos.incidenttypes, function (key, value) {
-                // Ver que hago cuando cambia el nombre del tipo o manda otra incidencia
-
-                var inc = new TipoIncidencia(
-                        value.id,
-                        value.delay,
-                        "img/incidents/" + value.description + '.png');
-
-                tiposIncidencias[value.id] =  inc;
-            });
-        });
-    }
-
-    function cargarIncidencias() {
-        
-
-            serviceCall('incidents', function (incidencias) {
-                $.each(incidencias.incidents, function (key, value) {
-
-                    var incidencia = new Incidencia(tiposIncidencias[value.type], value.coordinate);
-
-                    incidencia.marker.addTo(map);
-                });
-            });
     }
 
     function cargarConductores() {
