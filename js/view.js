@@ -22,7 +22,7 @@ function bootstrap() {
 
 
     var carIcon = L.icon({
-        iconUrl: 'img/pepe.png',
+        iconUrl: 'img/cars/ford.png',
         iconSize: [80, 38]
     });
 
@@ -53,11 +53,9 @@ function bootstrap() {
 
     // Cargar incidencias
     var servicioIncidencias = new IncidenciasService();
-
     servicioIncidencias.cargarIncidencias(map);
 
-    cargarConductores();
-    cargarPocisiones();
+    var servicioConductores = new ConductoresService();
 
     bindElements();
 
@@ -82,7 +80,6 @@ function bootstrap() {
                 xMarker = L.marker(posicionesDriver[0], {icon: carIcon});
                 xMarker.bindPopup(conductores.drivers[i].name).openPopup();
 
-
                 travelreq.addCar(new CarDriver(conductores.drivers[i].name, posicionesDriver, carIcon), xMarker); //el ultimo parametro es del icono, lo agregamos nosotros
             }
         }
@@ -99,7 +96,7 @@ function bootstrap() {
                     "click": function (e) {
                         ungsMarker.bindPopup("<b>Pedido Nº "+pedido.id+"</b>").openPopup();
 
-                        buscarConductoresPorPedido(ungsMarker.availableDrivers);
+                        servicioConductores.buscarConductoresPorPedido(ungsMarker.availableDrivers,travelreq);
                     }
                 });
 
