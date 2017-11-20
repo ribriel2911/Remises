@@ -34,9 +34,13 @@ var IncidenciasService = function () {
 
             $.each(incidencias.incidents, function (key, value) {
 
+            	console.log(tipos[value.type].urlIcon);
+
                 var incidencia = new Incidencia(tipos[value.type], value.coordinate);
 
                 incs.push(incidencia);
+
+                console.log(incidencia.tipo.urlIcon);
 
                 incidencia.marker.addTo(map);
             });
