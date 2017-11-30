@@ -22,11 +22,14 @@
 
         <!-- include race, runner y view -->
         <link rel="stylesheet" type="text/css" media="screen" href="css/view.css" />
+        <script src="js/panelInfo.js"></script>
+        <script src="js/footerInfoConductor.js"></script>
         <script src="js/travelRequest.js"></script>
         <script src="js/dao.js"></script>
         <script src="js/domain/incidencia.js"></script>
         <script src="js/domain/tipoIncidencia.js"></script>
         <script src="js/services/incidenciasService.js"></script>
+        <script src="js/services/conductoresService.js"></script>
         <script src="js/carDriver.js"></script>
         <script src="js/view.js"></script>
         <script scr="js/bootstrap/bootstrap.min.js"></script>
@@ -118,7 +121,21 @@
             </div>
 
         </div>
-        <div id="map"></div>
+
+         <div class="row">
+                <div class="col-sm-3 col-md-8" style="background-color:yellow;">
+                
+                    <div id="map"></div>
+
+                </div>
+                <div class="col-sm-9 col-md-4 panelInfo"   style="background-color:pink;">
+                     
+
+
+                </div>
+        </div>
+
+        
     </div>
     <footer class="text-center">
         <p>2017 FourSoft - Todos los derechos reservados </p>

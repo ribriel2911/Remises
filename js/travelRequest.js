@@ -3,6 +3,11 @@ var TravelRequest = function(name, map) {
     this.map = map;
     this.carsData = [];
 
+    var carIcon = L.icon({
+        iconUrl: 'img/pepe.png',
+        iconSize: [80, 38]
+    });
+
     this.addCar = function(carDriver , carLayerParam) {
         //Creamos el layer en el mapa para ese carDriver
 
@@ -14,22 +19,9 @@ var TravelRequest = function(name, map) {
         this.map.layersControl.addOverlay(carLayer, carDriver.name);
 
         var updater = function(newPosition, icon) {
-            //console.log("Updating view for car driver: " + carDriver.name + "!!");
-            //console.log(newPosition);
-
             carLayer.clearLayers();
+            carLayer.addLayer(L.marker(newPosition, {icon:carIcon}));
 
-            // Opción 1.
-            carLayer.addLayer(L.marker(newPosition, {icon:icon}));
-            // Opción 2.
-            // carLayer.addLayer(L.circleMarker(newPosition, {
-            //                         radius: 7,
-            //                         fillColor: "#00AA00",
-            //                         color: "#DDD",
-            //                         weight: 1,
-            //                         opacity: 1,
-            //                         fillOpacity: 0.3
-            //                     }));
         }
 
         this.carsData.push({
