@@ -6,7 +6,6 @@
                 url: 'https://snapcar.herokuapp.com/api/'+urlParam,
                 dataType: 'json',
             }).promise();
-
         };
 
         teste2 = ajaxDialog(urlParam);

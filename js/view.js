@@ -21,25 +21,8 @@ var global = function bootstrap() {
     map.layersControl = layersControl;
 
 
-    var carIcon = L.icon({
-        iconUrl: 'img/pepe.png',
-        iconSize: [80, 38]
-    });
-
     // Creamos un pedido de viaje
     var travelreq = new TravelRequest("UNGS", map);
-
-    // Obtner parametro de la URL que seleccionas en el formulario
-
-    var url = new URL(window.location);
-    var car = url.searchParams.get('car');
-    var ydist = url.searchParams.get('dist');
-    var yauto = url.searchParams.get('auto');
-    var ycalif = url.searchParams.get('calif');
-    var ycant = url.searchParams.get('cant');
-
-    var dr = [ydist, yauto, ycalif, ycant];
-
     var chofAgregados = [];
     var tiposIncidencias = [];
 
@@ -50,7 +33,7 @@ var global = function bootstrap() {
     var listMarker = [];
 
 
-
+    
     // Cargar incidencias
     var servicioIncidencias = new IncidenciasService(map);
     servicioIncidencias.cargarTiposDeIncidencia();
@@ -59,36 +42,6 @@ var global = function bootstrap() {
     servicioConductores.buscarConductores();
 
     bindElements();
-
-
-
-
-    function buscarPedidos() {
-        serviceCall('requests', function (pedidos) {
-            var seCargoUno = false;
-            $.each(pedidos.requests, function (key, pedido) {
-
-                if(!seCargoUno){
-                    var ungsMarker = L.marker(pedido.coordinate);
-                    var availableDrivers = pedido.availableDrivers;
-                    ungsMarker.addTo(map);
-                    ungsMarker['id'] = pedido.id;
-                    ungsMarker['availableDrivers'] = pedido.availableDrivers;
-                    ungsMarker.bindPopup("<b>Pedido Nº "+pedido.id+"</b>").openPopup();
-                    
-
-                    servicioConductores.buscarConductoresPorPedido(map, ungsMarker.availableDrivers,travelreq);    
-                    seCargoUno = true;
-                }
-                
-            });
-        });
-    }
-
-
-    function onMapClick(e) {
-        //alert("Usted esta aqui " + e.latlng);
-    }
 
     function bindElements() {
 
@@ -102,12 +55,41 @@ var global = function bootstrap() {
 
         map.on('popupopen', function (e) {
             var rmarker = e.popup._content;
-		
+
         });
 
         map.on('click', onMapClick);
         // START!
     }
+
+    function buscarPedidos() {
+        serviceCall('requests', function (pedidos) {
+            var seCargoUno = false;
+            $.each(pedidos.requests, function (key, pedido) {
+
+                if(!seCargoUno){
+                    var marker = L.marker(pedido.coordinate);
+                    var availableDrivers = pedido.availableDrivers;
+                    marker.addTo(map);
+                    marker['id'] = pedido.id;
+                    marker['availableDrivers'] = pedido.availableDrivers;
+                    marker.bindPopup("<b>Pedido Nº "+pedido.id+"</b>").openPopup();
+
+
+                    servicioConductores.buscarConductoresPorPedido(map, marker.availableDrivers,travelreq);
+                    seCargoUno = true;
+                }
+
+            });
+        });
+    }
+
+
+    function onMapClick(e) {
+        //alert("Usted esta aqui " + e.latlng);
+    }
+
+
 
 
 

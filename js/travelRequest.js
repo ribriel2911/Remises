@@ -21,7 +21,6 @@ var TravelRequest = function(name, map) {
         var updater = function(newPosition, icon) {
             carLayer.clearLayers();
             carLayer.addLayer(L.marker(newPosition, {icon:carIcon}));
-
         }
 
         this.carsData.push({

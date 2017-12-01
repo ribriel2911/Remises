@@ -11,10 +11,8 @@ var ConductoresService = function () {
 
 	this.conductores = [];
 	this.choferesDisponibleParaElPedido = [];
-	//crearConductores();
 
 	var infoComponent = new PanelInfo();
-	var footerInfoConductor = new FooterInfoConductor();
 
 	this.buscarConductoresPorPedido = function( map ,availableDrivers , travelReqParam ) {
 		this.travelreq = travelReqParam;
@@ -28,7 +26,7 @@ var ConductoresService = function () {
 				posiciones = posicionesR;
 				for (var i = 0; i < conductores.length; i ++) {
 
-							if( availableDrivers.indexOf( conductores[i].id ) > -1 ){
+							if( availableDrivers.indexOf( conductores[i].id ) > -1 ){  //compara conductores disponibles con los del arreglo
 								console.log(conductores[i].name +" agregado");
 					                var posicionesDriver = [];
 
@@ -38,17 +36,17 @@ var ConductoresService = function () {
 					                    }
 					                }
 
-					                
+
 
 									infoComponent.add(conductores[i]);
 
 					                var xMarker = null;
 					                xMarker = L.marker(posicionesDriver[0], {icon: carIcon});
 					                xMarker['type'] = 'CarType';
-					                xMarker.bindPopup(conductores[i].name + ' ' +conductores[i].surname +   
-					                					'<br>' + "Calificacion: " + conductores[i].score + 
-					                					'<br>' + 
-					                					'Modelo: ' + conductores[i].car.description  +   '<br>' + 'Color: ' + conductores[i].car.color 
+					                xMarker.bindPopup(conductores[i].name + ' ' +conductores[i].surname +
+					                					'<br>' + "Calificacion: " + conductores[i].score +
+					                					'<br>' +
+					                					'Modelo: ' + conductores[i].car.description  +   '<br>' + 'Color: ' + conductores[i].car.color
 					+ '<br><button type="button"  class="elegir" data-button="' + conductores[i].name  + '" >Pedir</button>').openPopup();
 					                xMarker.on({
 
@@ -58,7 +56,7 @@ var ConductoresService = function () {
 												$(".panelInfo").empty();
 												infoComponent.seleccionado(SsC.buscarConductorPorNombre(name));
 												SsC.seleccionoConductor(name , map,  SsC.travelreq);
-						        			}); 
+						        			});
 					                    }
 					                });
 
@@ -68,7 +66,7 @@ var ConductoresService = function () {
 												$(".panelInfo").empty();
 												infoComponent.seleccionado(SsC.buscarConductorPorNombre(name));
 												SsC.seleccionoConductor(name , map,  SsC.travelreq);
-						        			}); 
+						        			});
 
 									conductores[i].historialPosiciones = posicionesDriver;
 									var carDriver = new CarDriver(conductores[i].name,conductores[i].historialPosiciones, carIcon.urlIcon);
@@ -80,22 +78,7 @@ var ConductoresService = function () {
 				}
 		});
 
-		
-		/*var cargarEventoPedir = function(){
-			setTimeout(function(){ 
 
-			if ( $( ".elegir" ).length ) {
- 				$(".elegir").click(function (e) {
-					var name = e.target.dataset.button;
-					SsC.seleccionoConductor(name , map,  SsC.travelreq);
-	        	}); 
-			} else {
-				cargarEventoPedir();
-			}	 		
-			}, 500);
-		}
-		cargarEventoPedir();*/
-	
 
 	}
 
@@ -137,8 +120,6 @@ var ConductoresService = function () {
 	    serviceCall('drivers', function (infoC) {
 	    	$.each(infoC.drivers, function (key, value) {
 
-					//	var auto = new Auto(value.car);
-						//value['auto'] = auto;
 						conductores.push(value);
 				});
 
